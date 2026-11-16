@@ -173,7 +173,7 @@ function Nav() {
           ))}
         </nav>
 
-        <a className="nv-cta" href="#shelves" onClick={() => setOpen(false)}>تصفح المكتبة</a>
+        <a className="nv-cta" href={WEB_URL} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}>تصفح المكتبة</a>
 
         <button
           className={'nv-burger' + (open ? ' on' : '')}
@@ -720,9 +720,9 @@ function ShelfCover({ s }) {
 }
 
 /* ضع روابط التطبيق الحقيقية هنا */
-const PLAY_URL = '#'
-const APPSTORE_URL = '#'
-const WEB_URL = '#'
+const PLAY_URL = 'https://play.google.com/store/apps/details?id=com.dijlah.alamalislam&hl=ar'
+const APPSTORE_URL = 'https://apps.apple.com/us/app/%D9%85%D9%83%D8%AA%D8%A8%D8%A9-%D8%A3%D9%85%D9%84-%D8%A7%D9%84%D8%A7%D8%B3%D9%84%D8%A7%D9%85/id6833392995'
+const WEB_URL = APPSTORE_URL
 
 function PlayIcon() {
   return (
@@ -880,7 +880,7 @@ function DownloadBlock() {
             <span><small>حمّلها من</small><b>App Store</b></span>
           </a>
         </div>
-        <a className="browse" href={WEB_URL}>
+        <a className="browse" href={WEB_URL} target="_blank" rel="noopener noreferrer">
           <svg viewBox="0 0 60 60" className="browse-ico" aria-hidden="true"><path d="M30 46c-6-5-16-6-22-4V16c6-2 16-1 22 4zM30 46c6-5 16-6 22-4V16c-6-2-16-1-22 4z" fill="currentColor" /></svg>
           <span>تصفح المكتبة</span>
           <svg viewBox="0 0 24 24" className="browse-arrow" aria-hidden="true"><path d="M19 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="2.600" strokeLinecap="round" strokeLinejoin="round" /></svg>
