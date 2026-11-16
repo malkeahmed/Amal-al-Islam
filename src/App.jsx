@@ -330,6 +330,27 @@ function ChipBody({ c }) {
         </span>
       </div>
     )
+  if (c.node === 'rate')
+    return (
+      <div className="fc fc-stat">
+        <span className="fs-ico"><svg viewBox="0 0 24 24" className="xi" aria-hidden="true"><path d="M12 2l3.100 6.300 6.900 1-5 4.900 1.200 6.900L12 17.800 5.800 21l1.200-6.900-5-4.900 6.900-1z" fill="currentColor" /></svg></span>
+        <div><b>٤٫٩</b><small>التقييم</small></div>
+      </div>
+    )
+  if (c.node === 'pages')
+    return (
+      <div className="fc fc-stat">
+        <span className="fs-ico"><IcoBook /></span>
+        <div><b>١٥١</b><small>صفحة</small></div>
+      </div>
+    )
+  if (c.node === 'tag')
+    return (
+      <div className="fc fc-stat">
+        <span className="fs-ico"><IcoMark /></span>
+        <div><b>قضايا إسلامية</b><small>التصنيف</small></div>
+      </div>
+    )
   if (c.node === 'offline')
     return (
       <div className="fc fc-off">
@@ -344,7 +365,7 @@ function FloatChip({ p, c, off }) {
   const o = useTransform(p, c.at, [0, 1, 1, 0])
   const y = useTransform(p, c.at, [c.y + 70, c.y, c.y, c.y - 50])
   return (
-    <motion.div className={'chip' + (c.node ? ' chip-fc' : '')} style={{ opacity: o, y, x: c.side * off + (c.dx || 0), rotate: c.rot }}>
+    <motion.div className={'chip' + (c.node ? ' chip-fc' : '') + (c.node && c.side > 0 ? ' chip-r' : '')} style={{ opacity: o, y, x: c.side * off + (c.dx || 0), rotate: c.rot }}>
       <ChipBody c={c} />
     </motion.div>
   )
@@ -451,6 +472,9 @@ function Hero() {
   const CHIPS = [
     { side: -1, y: -140, dx: -70, at: [0.31, 0.36, 0.44, 0.48], rot: -9, cover: '/img/book-tazweej.webp' },
     { side: 1, y: 120, dx: 40, at: [0.32, 0.37, 0.44, 0.48], rot: 8, cover: '/img/book-fatayat.webp' },
+    { side: -1, y: -170, dx: 10, at: [0.47, 0.52, 0.59, 0.63], rot: -5, node: 'rate' },
+    { side: -1, y: -10, dx: 30, at: [0.48, 0.53, 0.59, 0.63], rot: 4, node: 'pages' },
+    { side: -1, y: 130, dx: 0, at: [0.49, 0.54, 0.59, 0.63], rot: -6, node: 'tag' },
     { side: -1, y: -170, dx: 100, at: [0.64, 0.69, 0.75, 0.79], rot: -5, node: 'book' },
     { side: -1, y: -10, dx: 112, at: [0.65, 0.7, 0.75, 0.79], rot: 4, node: 'tools' },
     { side: -1, y: 130, dx: 96, at: [0.66, 0.71, 0.75, 0.79], rot: -6, node: 'ring' },
