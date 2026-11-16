@@ -722,7 +722,7 @@ function ShelfCover({ s }) {
 /* ضع روابط التطبيق الحقيقية هنا */
 const PLAY_URL = 'https://play.google.com/store/apps/details?id=com.dijlah.alamalislam&hl=ar'
 const APPSTORE_URL = 'https://apps.apple.com/us/app/%D9%85%D9%83%D8%AA%D8%A8%D8%A9-%D8%A3%D9%85%D9%84-%D8%A7%D9%84%D8%A7%D8%B3%D9%84%D8%A7%D9%85/id6833392995'
-const WEB_URL = APPSTORE_URL
+const WEB_URL = 'http://alam-alislam.com/library'
 
 function PlayIcon() {
   return (
@@ -1275,7 +1275,13 @@ export default function App() {
   const reduce = useReducedMotion()
   useEffect(() => {
     if (reduce) return
-    const lenis = new Lenis({ duration: 1.15, smoothWheel: true })
+    const lenis = new Lenis({
+      lerp: 0.075,
+      smoothWheel: true,
+      wheelMultiplier: 0.85,
+      touchMultiplier: 1.4,
+      syncTouch: false,
+    })
     let raf
     const loop = (t) => {
       lenis.raf(t)
@@ -1289,7 +1295,11 @@ export default function App() {
       const el = id === '#top' ? 0 : document.querySelector(id)
       if (el !== null && el !== undefined) {
         e.preventDefault()
-        lenis.scrollTo(el, { offset: id === '#top' ? 0 : -60 })
+        lenis.scrollTo(el, {
+          offset: id === '#top' ? 0 : -60,
+          duration: 2,
+          easing: (t) => 1 - Math.pow(1 - t, 4),
+        })
       }
     }
     document.addEventListener('click', onClick)
