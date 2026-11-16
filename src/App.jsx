@@ -753,7 +753,7 @@ function ShelfCover({ s }) {
 /* ضع روابط التطبيق الحقيقية هنا */
 const PLAY_URL = 'https://play.google.com/store/apps/details?id=com.dijlah.alamalislam&hl=ar'
 const APPSTORE_URL = 'https://apps.apple.com/us/app/%D9%85%D9%83%D8%AA%D8%A8%D8%A9-%D8%A3%D9%85%D9%84-%D8%A7%D9%84%D8%A7%D8%B3%D9%84%D8%A7%D9%85/id6833392995'
-const WEB_URL = 'http://alam-alislam.com/library'
+const WEB_URL = '/library'
 
 function PlayIcon() {
   return (
@@ -885,8 +885,12 @@ function DownloadBlock() {
   const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start end', 'center center'] })
   const midY = useTransform(p, [0, 1], [150, 0])
   const sideY = useTransform(p, [0, 1], [230, 30])
-  const lx = useTransform(p, [0, 1], [0, -300])
-  const rx = useTransform(p, [0, 1], [0, 300])
+  const { w: vw } = useViewport()
+  const small = vw < 700
+  const spread = small ? 150 : 300
+  const fit = small ? Math.min(0.9, (vw - 40) / (262 + spread * 2)) : null
+  const lx = useTransform(p, [0, 1], [0, -spread])
+  const rx = useTransform(p, [0, 1], [0, spread])
   const lr = useTransform(p, [0, 1], [0, 20])
   const rr = useTransform(p, [0, 1], [0, -20])
   const glow = useTransform(p, [0, 1], [0.25, 1])
@@ -918,12 +922,12 @@ function DownloadBlock() {
         </a>
       </motion.div>
 
-      <div className="dlx-phones" aria-hidden="true">
-        <div className="dlx-stage">
-          <motion.div className="ph-wrap dlx-l" style={reduce ? { x: -300, y: 30, rotateY: 20 } : { x: lx, y: sideY, rotateY: lr }}>
+      <div className="dlx-phones" aria-hidden="true" style={small ? { height: 620 * fit + 10 } : undefined}>
+        <div className="dlx-stage" style={small ? { transform: `scale(${fit})`, transformOrigin: 'top center' } : undefined}>
+          <motion.div className="ph-wrap dlx-l" style={reduce ? { x: -spread, y: 30, rotateY: 20 } : { x: lx, y: sideY, rotateY: lr }}>
             <div className="ph ph-b2"><div className="ph-screen"><div className="ph-island" /><Shot k="reader" /></div></div>
           </motion.div>
-          <motion.div className="ph-wrap dlx-r" style={reduce ? { x: 300, y: 30, rotateY: -20 } : { x: rx, y: sideY, rotateY: rr }}>
+          <motion.div className="ph-wrap dlx-r" style={reduce ? { x: spread, y: 30, rotateY: -20 } : { x: rx, y: sideY, rotateY: rr }}>
             <div className="ph ph-b2"><div className="ph-screen"><div className="ph-island" /><Shot k="home" /></div></div>
           </motion.div>
           <motion.div className="ph-wrap dlx-m" style={reduce ? undefined : { y: midY }}>
