@@ -77,7 +77,7 @@ function BookStack() {
 
 const NAV = [
   ['top', 'الرئيسية', 'ابدأ من هنا', '/img/q-wide.jpg', '50% 40%'],
-  ['intro', 'عن المكتبة', 'كل كتاب نافذة إلى النور', '/img/s1.jpg', '50% 40%'],
+  ['intro', 'السيرة الذاتية', 'الكاتبة أمل الموسوي', '/img/s1.jpg', '50% 40%'],
   ['shelves', 'الرفوف', 'ستة رفوف من القرآن إلى الأخلاق', '/img/s3.jpg', '50% 35%'],
   ['download', 'تحميل التطبيق', 'مكتبة أمل الإسلام في جيبك', '/img/q1.jpg', '50% 30%'],
 ]
@@ -173,7 +173,7 @@ function Nav() {
           ))}
         </nav>
 
-        <a className="nv-cta" href="#shelves" onClick={() => setOpen(false)}>ادخل الرفوف</a>
+        <a className="nv-cta" href="#shelves" onClick={() => setOpen(false)}>تصفح المكتبة</a>
 
         <button
           className={'nv-burger' + (open ? ' on' : '')}
@@ -381,16 +381,14 @@ function XCards({ p }) {
   return (
     <>
       <XCard p={p} z0={110} z1={50} className="xc-a">
-        <div className="xa-row"><span className="xa-ico"><IcoBook /></span><small>تابع القراءة</small></div>
-        <b className="xa-big">سورة البقرة</b>
+        <div className="xa-row"><span className="xa-ico"><IcoBook /></span></div>
+        <div className="xa-pills">
+          <span className="xb-pill"><IcoBook />اقرأ</span>
+          <span className="xb-pill"><IcoMark />احفظ</span>
+        </div>
         <div className="xa-bar"><i /></div>
       </XCard>
-      <XCard p={p} z0={150} z1={70} className="xc-b">
-        <span className="xb-pill"><IcoBook />اقرأ</span>
-        <span className="xb-pill"><IcoMark />احفظ</span>
-      </XCard>
       <XCard p={p} z0={90} z1={40} className="xc-c">
-        <small className="xc-t">ورد اليوم</small>
         <div className="xc-bars">
           {bars.map((v, i) => <i key={i} className={i === 5 ? 'on' : ''} style={{ height: v + '%' }} />)}
         </div>
@@ -473,12 +471,9 @@ function Hero() {
             <span className="hx-mask"><motion.small initial={reduce ? false : { y: '120%' }} animate={{ y: '0%' }} transition={{ duration: 0.9, delay: 0.05, ease: [0.2, 0.7, 0.2, 1] }}>مكتبة</motion.small></span>
             <span className="hx-mask"><motion.span initial={reduce ? false : { y: '120%' }} animate={{ y: '0%' }} transition={{ duration: 1, delay: 0.18, ease: [0.2, 0.7, 0.2, 1] }}>أمل الإسلام</motion.span></span>
           </h1>
-          <motion.p className="hx-sub" initial={reduce ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.6 }}>
-            كتابٌ واحد. نافذةٌ إلى النور.
-          </motion.p>
           <motion.div className="hx-actions" initial={reduce ? false : { opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, delay: 0.8 }}>
             <a className="btn btn-lg" href="#shelves">ادخل المكتبة</a>
-            <a className="hx-link" href="#shelves">تعرّف علينا <span aria-hidden="true">‹</span></a>
+            <a className="hx-link" href="#intro">تعرّف علينا <span aria-hidden="true">›</span></a>
           </motion.div>
         </motion.div>
 
@@ -517,65 +512,140 @@ function Hero() {
   )
 }
 
-/* ───────────── 2 · intro — a sentence, then pictures pass ───────────── */
+/* ───────────── 2 · biography — the author, told as you scroll ───────────── */
 
-const INTRO = 'كل كتاب نافذة إلى النور؛ وقد رتّبنا هذه النوافذ جنبًا إلى جنب.'.split(' ')
+const BIO = [
+  {
+    t: 'الميلاد والنشأة', f1: 'بغداد · ١٩٦٤م', f2: 'من أسرة المقدس الغريفي الموسوي',
+    text: 'ولدت الكاتبة في بغداد سنة ١٩٦٤م وهي علوية الابوين من أسرة علمية دينية هي أسرة المقدس الغريفي الموسوي وهي أسرة معروفة بكثرة العلماء والمفكرين فيها والذين خدموا الدين ومذهب أمير المؤمنين عبر أجيال كثيرة وامها من السادة آل الصافي في النجف .. فكانت نشأتها وتربيتها في أحضان هذه الأسرة العلوية الطيبة',
+  },
+  {
+    t: 'طلب العلم', f1: 'المنطق وأصول المظفر', f2: 'على يد والدها العلّامة السيد محسن المقدس الغريفي',
+    text: 'تلقت الدروس الدينية عند والدها الشهيد العلامة السيد محسن المقدس الغريفي فدرست عنده المنطق وأصول المظفر، فكان للأسرة من جهة وللجهد والمثابرة الفردية من جهة أخرى الأثر الكبير في صقل الشخصية العلمية والمواهب الفكرية عند الكاتبة.',
+  },
+  {
+    t: 'عصر الحركات الكبرى', f1: 'حركتان كبريان', f2: 'في العراق وإيران، بقيادة السيد محمد باقر الصدر والسيد الخميني',
+    text: 'عاصرت الكاتبة منذ أوائل نشوءها الحركات الإسلامية الكبرى في العراق والمنطقة وعلى رأسها الحركة الفكرية الواعية في العراق بقيادة السيد الشهيد السعيد محمد باقر الصدر (قدس سره) وكذلك الحركة الإسلامية في إيران بقيادة السيد الخميني ( قدس سره) فكانت بوجدانها وشعورها تواكب تلك الحركات الإسلامية وتستمد منها الجذوة التي ألهبت فيها الروح الرسالية.',
+  },
+  {
+    t: 'الروح الرسالية', f1: 'الروح الرسالية', f2: 'تغيير العادات وتصحيح الانحرافات الاجتماعية',
+    text: 'وكانت تلك الروح الرسالية هي الدافع لها لكي تسير على خطى الرسل والعلماء الرساليين في تغيير العادات الإجتماعية السيئة وتصحيح الإنحرافات الإجتماعية التي سادت في المجتمع قديما وحديثا، فاستشعرت المسؤولية في محاربة تلك العادات وتلك الإنحرافات التي كان سببها أعداء دين الإنسانية دين الحياة الدين الإسلامي الذي كان مقررا له أن يجعل الإنسان في قمة السعادة في حياته الدنيا وفي حياته الباقية.',
+  },
+  {
+    t: 'لغةٌ للجميع', f1: 'لغةٌ سهلة للجميع', f2: 'مستلهمة من الكتاب الكريم وأحاديث أهل البيت',
+    text: 'وكانت كتبها ومؤلفاتها رسائل واضحة وسهلة وبمتناول أفهام الناس جميعا فكانت اللغة التي كتبت بها لغة سهلة يستسيغها الجميع، ولم تتعدى فيما كتبته روح الشريعة السمحاء وتعاليمها الغراء فكانت مواضيعها هي في روحها معاني جاء بها الكتاب الكريم و أحاديث أهل بيت النبوة لذلك كان لها المقبولية والتأثير بفضل الله تعالى.',
+  },
+  {
+    t: 'المؤلفات', f1: 'مؤلفات اجتماعية وتربوية', f2: 'ترجمت جامعات إيرانية بعضها إلى الفارسية',
+    text: 'واتسمت مؤلفات الكاتبة بالطابع الإجتماعي والتربوي حيث تناولت قضايا الأسرة والزواج وتربية الطفل ومعالجة الظواهر المنحرفة في المجتمع مستلهمة الحلول من النماذج البشرية الأكمل وهم أهل بيت النبوة (صلوات الله عليهم اجمعين) ونحت في كتبها ذلك المنحى ووسمتها بتلك السمة لما رأت من حاجة لمثل تلك المواضيع، ويظهر ذلك من مؤلفاتها، وقد ترجمت بعض الجامعات الإيرانية بعض كتبها الى اللغة الفارسية لتوزيعها على الطالبات.',
+  },
+]
 
-function ArchPic({ src, alt, speed = 80, w = '100%', ratio = '4 / 5' }) {
-  const ref = useRef(null)
-  const reduce = useReducedMotion()
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], [speed, -speed])
-  const inner = useTransform(scrollYProgress, [0, 1], ['-8%', '8%'])
+const BIO_COVERS = ['/img/book-wilaya.webp', '/img/book-tazweej.webp', '/img/book-fatayat.webp']
+
+const clamp01 = (v) => Math.max(0, Math.min(1, v))
+
+function BioWord({ w, i, n, prog }) {
+  const o = useTransform(prog, [i / n, Math.min(1, (i + 3) / n)], [0.16, 1])
+  return <motion.span style={{ opacity: o }}>{w} </motion.span>
+}
+
+function BioChapter({ c, k, u, last }) {
+  const t = useTransform(u, (v) => clamp01(v - k))
+  const prog = useTransform(t, [0.08, 0.78], [0, 1])
+  const o = useTransform(t, last ? [0, 0.05] : k === 0 ? [0, 0.02, 0.94, 1] : [0, 0.06, 0.94, 1], last ? [0, 1] : k === 0 ? [1, 1, 1, 0] : [0, 1, 1, 0])
+  const y = useTransform(t, last ? [0, 0.05] : [0, 0.06, 0.94, 1], last ? [30, 0] : [30, 0, 0, -30])
+  const words = c.text.split(' ').filter(Boolean)
   return (
-    <motion.figure ref={ref} className="archpic" style={reduce ? { width: w } : { y, width: w }}>
-      <div className="archpic-frame" style={{ aspectRatio: ratio }}>
-        <motion.img src={src} alt={alt} style={reduce ? undefined : { y: inner, scale: 1.18 }} />
-      </div>
-    </motion.figure>
+    <motion.article className="bx-ch" style={{ opacity: o, y }}>
+      <h3 className="bx-ct">{c.t}</h3>
+      <p className="bx-p">
+        {words.map((w, i) => <BioWord key={i} w={w} i={i} n={words.length} prog={prog} />)}
+      </p>
+    </motion.article>
   )
 }
 
-function BookPic({ src, alt, speed = 80, w = '100%', rot = 0 }) {
-  const ref = useRef(null)
-  const reduce = useReducedMotion()
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], [speed, -speed])
-  const r = useTransform(scrollYProgress, [0, 1], [rot - 2, rot + 2])
+function BioTick({ c, k, u, onGo }) {
+  const on = useTransform(u, [k - 0.5, k, k + 0.95, k + 1], [0.35, 1, 1, 0.35])
+  const sc = useTransform(u, [k - 0.5, k, k + 0.95, k + 1], [1, 1.5, 1.5, 1])
   return (
-    <motion.figure ref={ref} className="bookpic" style={reduce ? { width: w } : { y, rotate: r, width: w }}>
-      <img src={src} alt={alt} decoding="async" />
-    </motion.figure>
+    <li>
+      <button className="bx-tick" onClick={() => onGo(k)}>
+        <motion.i className="bx-dot" style={{ scale: sc, opacity: on }} />
+        <motion.span style={{ opacity: on }}>{c.t}</motion.span>
+      </button>
+    </li>
   )
 }
 
 function Intro() {
+  const ref = useRef(null)
+  const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] })
+  const u = useTransform(p, (v) => clamp01((v - 0.04) / 0.92) * BIO.length)
+  const line = useTransform(u, [0, BIO.length], [0, 1])
+  const [act, setAct] = useState(0)
+  useMotionValueEvent(u, 'change', (v) => setAct(Math.max(0, Math.min(BIO.length - 1, Math.floor(v)))))
+
+  const go = (k) => {
+    const el = ref.current
+    if (!el) return
+    const top = el.getBoundingClientRect().top + window.scrollY
+    const range = el.offsetHeight - window.innerHeight
+    window.scrollTo({ top: top + (0.04 + (0.92 * (k + 0.1)) / BIO.length) * range, behavior: 'smooth' })
+  }
+  const cur = BIO[act]
+
   return (
-    <section className="intro" id="intro" data-nav="dark">
-      <div className="intro-side">
-        <ArchPic src="/img/book-muhammad.webp" alt="غلاف كتاب محمد (ص) الرحمة المهداة" speed={60} />
-        <ArchPic src="/img/book-fatima.webp" alt="غلاف كتاب إضاءة في الهوية المعنوية للصديقة فاطمة (ع)" speed={110} w="78%" ratio="1 / 1.1" />
-      </div>
-      <div className="intro-mid">
-        <p className="statement">
-          {INTRO.map((w, i) => (
-            <motion.span
-              key={i}
-              initial={{ opacity: 0.12 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true, margin: '0px 0px -25% 0px' }}
-              transition={{ duration: 0.6, delay: i * 0.07 }}
-            >
-              {w}{' '}
-            </motion.span>
-          ))}
-        </p>
-        <Reveal as="p" className="intro-note" delay={0.2}>
-          الأمل هو الرجاء. ومكتبتنا لمن يريد أن يقرأ ويفهم، ثم يزن حياته بما فهم.
-        </Reveal>
-      </div>
-      <div className="intro-side intro-side-b">
-        <ArchPic src="/img/book-deen.webp" alt="غلاف كتاب الدين هو الحب" speed={90} w="86%" ratio="4 / 5.4" />
+    <section className="bx" id="intro" data-nav="dark" ref={ref}>
+      <div className="bx-stage">
+        <div className="bx-bg" aria-hidden="true" />
+
+        <header className="bx-head">
+          <h2 className="bx-title">السيرة الذاتية</h2>
+          <p className="bx-tag">كاتبة إسلامية معاصرة تقيم في النجف الأشرف</p>
+        </header>
+
+        <div className="bx-main">
+          <div className="bx-read">
+            {BIO.map((c, k) => <BioChapter key={k} c={c} k={k} u={u} last={k === BIO.length - 1} />)}
+          </div>
+
+          <aside className="bx-card" aria-label="الكاتبة أمل الموسوي">
+            <div className="bx-who">
+              <div>
+                <b>الكاتبة أمل الموسوي</b>
+                <small>النجف الأشرف</small>
+              </div>
+            </div>
+
+            <div className="bx-time">
+              <motion.span className="bx-line" style={{ scaleY: line }} aria-hidden="true" />
+              <ul>
+                {BIO.map((c, k) => <BioTick key={k} c={c} k={k} u={u} onGo={go} />)}
+              </ul>
+            </div>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={act}
+                className="bx-fact"
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.35, ease: [0.2, 0.7, 0.2, 1] }}
+              >
+                <b>{cur.f1}</b>
+                <span>{cur.f2}</span>
+                {act === BIO.length - 1 && (
+                  <div className="bx-covers" aria-hidden="true">
+                    {BIO_COVERS.map((src) => <img key={src} src={src} alt="" decoding="async" />)}
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </aside>
+        </div>
       </div>
     </section>
   )
@@ -809,7 +879,7 @@ function DownloadBlock() {
 
       <div className="dlx-foot">
         <p className="dlx-rights">جميع الحقوق محفوظة</p>
-        <p className="dlx-power">Powered by <b>Dijla</b></p>
+        <p className="dlx-power">Powered by <b>Dijlah IT</b></p>
       </div>
     </div>
   )
@@ -866,7 +936,6 @@ function FlowCaption({ sh, k, pos }) {
   return (
     <motion.p className="cfx-cap" style={{ opacity: o, y }}>
       <b>{sh.name}</b>
-      {sh.text}
     </motion.p>
   )
 }
@@ -913,13 +982,6 @@ function Shelves() {
     <section className="cfs" id="shelves">
       <div className="cfs-run" ref={ref}>
         <div className="cfs-stage">
-          <motion.div className="cfs-head" style={reduce ? undefined : { scale: headScale }}>
-            <h2 className="cfs-title">ستة كتب. نافذة واحدة.</h2>
-            <motion.p className="cfs-lead" style={reduce ? undefined : { opacity: leadO }}>
-              انزل ببطء، ودع الكتب تمرّ أمامك واحداً بعد الآخر.
-            </motion.p>
-          </motion.div>
-
           {BOOKS.map((sh, k) => <FlowLayer key={sh.id} sh={sh} k={k} pos={pos} />)}
 
           <motion.div className="cfx" style={reduce ? undefined : { y: flowY, opacity: flowO }}>
@@ -1180,7 +1242,7 @@ function SiteFooter() {
   return (
     <footer className="sfoot">
       <p className="sfoot-copy">جميع الحقوق محفوظة</p>
-      <p className="sfoot-power">Powered by <b>Dijla</b></p>
+      <p className="sfoot-power">Powered by <b>Dijlah IT</b></p>
     </footer>
   )
 }

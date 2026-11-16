@@ -165,6 +165,6 @@ const WEB_URL = '#'       // زر «تصفح المكتبة»
 
 جميع الحقوق محفوظة · All rights reserved
 
-**Powered by Dijla**
+**Powered by Dijlah IT**
 
 </div>
