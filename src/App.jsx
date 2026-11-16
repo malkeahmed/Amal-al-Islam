@@ -94,6 +94,14 @@ function Logo() {
   )
 }
 
+const DOCK_ICO = [
+  'M3 11l9-7.500 9 7.500M5.500 9.500V20h13V9.500M10 20v-5.500h4V20',
+  'M12 12.500a4 4 0 100-8 4 4 0 000 8zM4.500 20c.800-3.600 3.800-5.500 7.500-5.500s6.700 1.900 7.500 5.500',
+  'M4 4.500h4v15H4zM10 4.500h4v15h-4zM16.500 5.500l3.500-1 3 14-3.500 1z',
+  'M12 4v11M7.500 10.500L12 15l4.500-4.500M5 19.500h14',
+]
+const DOCK_LBL = ['الرئيسية', 'السيرة', 'الرفوف', 'تحميل']
+
 function Nav() {
   const { scrollY, scrollYProgress } = useScroll()
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 26, mass: 0.4 })
@@ -188,6 +196,23 @@ function Nav() {
         <motion.span className="nv-progress" style={{ scaleX: progress }} aria-hidden="true" />
       </header>
 
+
+      <nav className="dock" aria-label="التنقل السريع">
+        {NAV.map(([id, label], i) => (
+          <a key={id} href={'#' + id} className={'dock-i' + (active === id || (!active && i === 0) ? ' on' : '')} aria-label={label}>
+            {(active === id || (!active && i === 0)) && (
+              <motion.span layoutId="dockpill" className="dock-pill" transition={{ type: 'spring', stiffness: 420, damping: 32 }} />
+            )}
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={DOCK_ICO[i]} fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            <span>{DOCK_LBL[i]}</span>
+          </a>
+        ))}
+        <a className="dock-i dock-go" href={WEB_URL} target="_blank" rel="noopener noreferrer" aria-label="تصفح المكتبة">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20c-3-2.2-7-2.700-9.500-2V5c2.500-.700 6.500-.200 9.500 2zM12 20c3-2.200 7-2.700 9.500-2V5C19 4.300 15 4.800 12 7z" fill="currentColor" /></svg>
+          <span>المكتبة</span>
+        </a>
+      </nav>
+
       <AnimatePresence>
         {open && (
           <motion.div
@@ -208,6 +233,7 @@ function Nav() {
                     onFocus={() => setImg(i)}
                     onClick={() => setOpen(false)}
                   >
+                    <i className="menu-num" aria-hidden="true">{String(i + 1).padStart(2, '0').replace(/[0-9]/g, (d) => '٠١٢٣٤٥٦٧٨٩'[d])}</i>
                     <span className="menu-mask">
                       <motion.span
                         className="menu-word"
@@ -221,6 +247,7 @@ function Nav() {
                     <motion.small initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.75 + i * 0.09, duration: 0.6 }}>
                       {sub}
                     </motion.small>
+                    <svg className="menu-go" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 5l-7 7 7 7" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" /></svg>
                   </a>
                 ))}
               </nav>
@@ -237,8 +264,12 @@ function Nav() {
                   ))}
                 </div>
               </motion.div>
-              <motion.div className="menu-foot" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.9, duration: 0.6 }}>
-                <a href="mailto:info@amal-al-islam.example">info@amal-al-islam.example</a>
+              <motion.div className="menu-foot" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.7, ease: [0.2, 0.7, 0.2, 1] }}>
+                <a className="menu-cta" href={WEB_URL} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}>تصفح المكتبة</a>
+                <div className="menu-stores">
+                  <a href={PLAY_URL} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}>Google Play</a>
+                  <a href={APPSTORE_URL} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)}>App Store</a>
+                </div>
                 <p>الكتاب نافذة إلى النور.</p>
               </motion.div>
             </div>
@@ -434,7 +465,7 @@ function Hero() {
   const { w, h } = useViewport()
   const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] })
 
-  const sMax = Math.min((h * 0.74) / PHH, (w * 0.8) / PW, 1.5)
+  const sMax = w < 900 ? Math.min((h * 0.6) / PHH, (w * 0.66) / PW, 1.1) : Math.min((h * 0.74) / PHH, (w * 0.8) / PW, 1.5)
   const sStart = sMax * 1.08
 
   const tO = useTransform(p, [0, 0.1], [1, 0])
@@ -442,7 +473,7 @@ function Hero() {
   const tS = useTransform(p, [0, 0.1], [1, 0.94])
 
   const desk = w >= 900
-  const phY = useTransform(p, [0, 0.18, 0.3, 1], desk ? [h * 0.02, h * 0.02, -h * 0.01, -h * 0.01] : [h * 0.44, h * 0.08, -h * 0.01, -h * 0.01])
+  const phY = useTransform(p, [0, 0.18, 0.3, 1], desk ? [h * 0.02, h * 0.02, -h * 0.01, -h * 0.01] : [h * 0.44, h * 0.1, h * 0.07, h * 0.07])
   const phX = useTransform(p, [0, 0.28], [desk ? -w * 0.2 : 0, 0])
   const rZ = useTransform(p, [0, 0.28], [desk ? 6 : 3, 0])
   const phS = useTransform(p, [0, 0.18, 0.3], [sStart, sMax, sMax * 1.03])
