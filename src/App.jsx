@@ -461,9 +461,10 @@ function XCards({ p }) {
 
 function Hero() {
   const ref = useRef(null)
+  const trackRef = useRef(null)
   const reduce = useReducedMotion()
   const { w, h } = useViewport()
-  const { scrollYProgress: p } = useScroll({ target: ref, offset: ['start start', 'end end'] })
+  const { scrollYProgress: p } = useScroll({ target: trackRef, offset: ['start start', 'end end'] })
 
   const sMax = w < 900 ? Math.min((h * 0.6) / PHH, (w * 0.66) / PW, 1.1) : Math.min((h * 0.74) / PHH, (w * 0.8) / PW, 1.5)
   const sStart = sMax * 1.08
@@ -515,6 +516,7 @@ function Hero() {
 
   return (
     <section ref={ref} className="hero" id="top" data-nav="dark">
+      <div ref={trackRef} className="hx-track" aria-hidden="true" />
       <div className="hx-stage">
         <motion.div className="hx-floor" style={reduce ? undefined : { opacity: floorO }} aria-hidden="true" />
         <motion.div className="hx-tint hx-tint-a" style={reduce ? undefined : { opacity: gA }} aria-hidden="true" />
@@ -538,9 +540,6 @@ function Hero() {
           <motion.div className="hx-book" style={reduce ? undefined : { x: phX, y: phY, scale: phS }}>
             {!reduce && CHIPS.map((c, i) => <FloatChip key={i} p={p} c={c} off={off} />)}
             <motion.div className="px3d" style={reduce ? { rotateX: 4, rotateY: -6 } : { rotateX: rX, rotateY: rY, rotateZ: rZ }}>
-              {[0, 1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="px-slab" style={{ transform: `translateZ(${-2 - i * 2}px)` }} />
-              ))}
               <XCards p={p} />
               <i className="px-btn px-btn-a" />
               <i className="px-btn px-btn-b" />
@@ -1310,6 +1309,8 @@ export default function App() {
   const reduce = useReducedMotion()
   useEffect(() => {
     if (reduce) return
+    /* diagnostic: add ?plain to the address to turn smooth-scrolling off */
+    if (new URLSearchParams(window.location.search).has('plain')) return
     const lenis = new Lenis({
       lerp: 0.075,
       smoothWheel: true,
@@ -1323,19 +1324,31 @@ export default function App() {
       raf = requestAnimationFrame(loop)
     }
     raf = requestAnimationFrame(loop)
+    /* section links: land directly on the target (no travelling through the other
+       scenes), then let the section itself ease in. */
     const onClick = (e) => {
       const a = e.target.closest('a[href^="#"]')
       if (!a) return
       const id = a.getAttribute('href')
-      const el = id === '#top' ? 0 : document.querySelector(id)
-      if (el !== null && el !== undefined) {
-        e.preventDefault()
-        lenis.scrollTo(el, {
-          offset: id === '#top' ? 0 : -60,
-          duration: 2,
-          easing: (t) => 1 - Math.pow(1 - t, 4),
-        })
+      const node = id === '#top' ? document.getElementById('top') : document.querySelector(id)
+      if (!node) return
+      e.preventDefault()
+      const y = id === '#top' ? 0 : Math.max(0, node.getBoundingClientRect().top + window.scrollY - 60)
+      const dist = Math.abs(y - window.scrollY)
+      if (dist < 4) return
+      if (dist < window.innerHeight * 1.2) {
+        lenis.scrollTo(y, { duration: 1, easing: (t) => 1 - Math.pow(1 - t, 4) })
+        return
       }
+      lenis.scrollTo(y, { immediate: true, force: true })
+      node.getAnimations().forEach((x) => x.cancel())
+      node.animate(
+        [
+          { opacity: 0, transform: 'translateY(46px) scale(0.985)' },
+          { opacity: 1, transform: 'none' },
+        ],
+        { duration: 750, easing: 'cubic-bezier(.2,.7,.2,1)' }
+      )
     }
     document.addEventListener('click', onClick)
     return () => {

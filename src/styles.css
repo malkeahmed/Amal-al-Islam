@@ -1427,3 +1427,58 @@ body::after {
   .dlx-stage .ph-wrap { margin-left: -131px; }
   .dlx-phones { overflow: hidden; padding-inline: 0; }
 }
+
+/* ───────── v27 · fix: brown diagonal band across the hero phone on some laptops ─────────
+   The thickness slabs sat only ~2px behind the screen, so on some GPUs the depth sort
+   mis-ordered them and a slab showed through. Keep the screen clearly in front of them
+   and stop the glare from using a blend mode inside the 3D context. */
+.px { transform: translateZ(8px); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.px-slab { backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.px-glare { mix-blend-mode: normal; }
+
+/* v27b · the depth slabs are gone (they leaked through the screen in Chrome); fake the
+   phone's thickness with a flat stack of edge shadows instead — no 3D depth sorting involved. */
+.px-slab { display: none !important; }
+.px {
+  transform: none; backface-visibility: visible; -webkit-backface-visibility: visible;
+  box-shadow:
+    inset 0 0 0 2px #6a4f2c, inset 0 0 0 4px #1a110a,
+    1px 1px 0 #7d5428, 2px 2px 0 #6b4822, 3px 3px 0 #5a3c1c, 4px 4px 0 #4a3016,
+    0 60px 110px -30px rgba(0, 0, 0, 0.9), 0 0 120px -20px rgba(212, 162, 76, 0.5);
+}
+
+/* v27c · fuller, chunkier phone body (no 3D slabs): metal rim + dark ring + edge stack */
+.px {
+  box-shadow:
+    inset 0 0 0 2px #6a4f2c, inset 0 0 0 4px #1a110a,
+    0 0 0 3px #b98f48, 0 0 0 5px #6b4822, 0 0 0 7px #2a1a0c,
+    1px 1px 0 7px #4a3016, 2px 2px 0 7px #3a2610,
+    0 60px 110px -30px rgba(0, 0, 0, 0.9), 0 0 120px -20px rgba(212, 162, 76, 0.5);
+}
+.px-btn-a, .px-btn-b, .px-btn-d { left: -11px; }
+.px-btn-c, .px-btn-e { right: -11px; }
+.px-btn { transform: translateZ(1px); }
+
+/* v28 · Chrome: keep the pinned hero from "jumping" when the page moves on to the next section */
+html, body { overflow-anchor: none; }
+.hx-stage, .bx-stage, .cfs-stage, .st-stage { overflow-anchor: none; }
+/* the whole pinned stage is one stable compositor layer, so the phone can't drift from it */
+.hx-stage { transform: translateZ(0); backface-visibility: hidden; -webkit-backface-visibility: hidden; contain: layout paint; }
+/* a permanent will-change on a scaling 3D object makes Chrome re-raster it mid-scroll (visible pop) */
+.hx-book { will-change: auto; }
+.hx-scene { animation: none; }
+
+/* v29 · the hero stays pinned and the biography slides OVER it (no un-pinning of the 3D phone,
+   which is what produced the clipped / glitching rectangle in Chrome) */
+.hx-track { position: absolute; top: 0; left: 0; width: 1px; height: 1000svh; pointer-events: none; visibility: hidden; }
+@media (prefers-reduced-motion: no-preference) {
+  .hero { height: calc(1000svh + 100svh); }
+  #intro.bx { margin-top: -100svh; z-index: 6; box-shadow: 0 -50px 90px -10px rgba(0, 0, 0, 0.85); }
+}
+@media (max-width: 900px) {
+  .hx-track { height: 900svh; }
+}
+@media (max-width: 900px) and (prefers-reduced-motion: no-preference) {
+  .hero { height: calc(900svh + 100svh); }
+}
+@media (prefers-reduced-motion: reduce) { .hx-track { display: none; } }
