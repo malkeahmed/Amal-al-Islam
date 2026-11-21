@@ -144,8 +144,10 @@ function Nav() {
     <>
       <header className={'nv' + (solid ? ' is-solid' : '') + (open ? ' is-open' : '')}>
         <a className="nv-brand" href="#top" aria-label="مكتبة أمل الإسلام" onClick={() => setOpen(false)}>
-          <Logo />
-          <b>أمل الإسلام</b>
+          <picture>
+            <source media="(max-width: 900px)" srcSet="/logo-light.png" />
+            <img className="nv-logo" src="/logo.png" alt="" width="512" height="512" />
+          </picture>
         </a>
 
         <nav
@@ -600,7 +602,7 @@ const BIO_COVERS = ['/img/book-wilaya.webp', '/img/book-tazweej.webp', '/img/boo
 const clamp01 = (v) => Math.max(0, Math.min(1, v))
 
 function BioWord({ w, i, n, prog }) {
-  const o = useTransform(prog, [i / n, Math.min(1, (i + 3) / n)], [0.16, 1])
+  const o = useTransform(prog, [i / n, Math.min(1, (i + 3) / n)], [0.28, 1])
   return <motion.span style={{ opacity: o }}>{w} </motion.span>
 }
 
@@ -612,6 +614,7 @@ function BioChapter({ c, k, u, last }) {
   const words = c.text.split(' ').filter(Boolean)
   return (
     <motion.article className="bx-ch" style={{ opacity: o, y }}>
+      <span className="bx-no" aria-hidden="true"><b>{String(k + 1).padStart(2, '0')}</b><i /></span>
       <h3 className="bx-ct">{c.t}</h3>
       <p className="bx-p">
         {words.map((w, i) => <BioWord key={i} w={w} i={i} n={words.length} prog={prog} />)}
@@ -620,12 +623,12 @@ function BioChapter({ c, k, u, last }) {
   )
 }
 
-function BioTick({ c, k, u, onGo }) {
+function BioTick({ c, k, u, onGo, act }) {
   const on = useTransform(u, [k - 0.5, k, k + 0.95, k + 1], [0.35, 1, 1, 0.35])
   const sc = useTransform(u, [k - 0.5, k, k + 0.95, k + 1], [1, 1.5, 1.5, 1])
   return (
-    <li>
-      <button className="bx-tick" onClick={() => onGo(k)}>
+    <li className={k === act ? 'is-on' : k < act ? 'is-done' : ''}>
+      <button className="bx-tick" onClick={() => onGo(k)} aria-label={c.t} aria-current={k === act ? 'step' : undefined}>
         <motion.i className="bx-dot" style={{ scale: sc, opacity: on }} />
         <motion.span style={{ opacity: on }}>{c.t}</motion.span>
       </button>
@@ -676,7 +679,7 @@ function Intro() {
             <div className="bx-time">
               <motion.span className="bx-line" style={{ scaleY: line }} aria-hidden="true" />
               <ul>
-                {BIO.map((c, k) => <BioTick key={k} c={c} k={k} u={u} onGo={go} />)}
+                {BIO.map((c, k) => <BioTick key={k} c={c} k={k} u={u} onGo={go} act={act} />)}
               </ul>
             </div>
 
